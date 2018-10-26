@@ -4,6 +4,13 @@
 GK Chip Solver Using Integer Programming.
 
 
+# Requirements
+
+```
+python3 numpy pandas cvxpy matplotlib
+```
+
+
 ## Usage
 
 Generate a pdf file showing all types of chips.

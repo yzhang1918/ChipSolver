@@ -16,6 +16,42 @@ def load_board(name):
         else:
             raise NotImplementedError
         board = Board(6, 6, mask_idx)
+    elif name.startswith('Ex1'):
+        mat = np.array([[1, 1, 1, 1, 1, 1],
+                        [1, 1, 1, 1, 1, 1],
+                        [1, 1, 0, 0, 1, 1],
+                        [1, 1, 0, 0, 1, 1],
+                        [1, 1, 1, 1, 1, 1],
+                        [1, 1, 1, 1, 1, 1],
+                        ])
+        board = Board(6, 6, np.where(mat == 0))
+    elif name.startswith('Ex2'):
+        mat = np.array([[0, 0, 1, 1, 0, 0],
+                        [0, 1, 1, 1, 1, 0],
+                        [1, 1, 1, 1, 1, 1],
+                        [1, 1, 1, 1, 1, 1],
+                        [0, 1, 1, 1, 1, 0],
+                        [0, 0, 1, 1, 0, 0],
+                        ])
+        board = Board(6, 6, np.where(mat == 0))
+    elif name.startswith('Ex3'):
+        mat = np.array([[1, 1, 1, 1, 1, 1],
+                        [1, 0, 0, 1, 1, 1],
+                        [1, 0, 1, 1, 1, 1],
+                        [1, 1, 1, 1, 0, 1],
+                        [1, 1, 1, 0, 0, 1],
+                        [1, 1, 1, 1, 1, 1],
+                        ])
+        board = Board(6, 6, np.where(mat == 0))
+    elif name.startswith('Ex4'):
+        mat = np.array([[1, 1, 1, 1, 1, 1],
+                        [1, 0, 0, 1, 1, 1],
+                        [1, 0, 0, 0, 1, 1],
+                        [1, 1, 0, 0, 0, 1],
+                        [1, 1, 1, 0, 0, 1],
+                        [1, 1, 1, 1, 1, 1],
+                        ])
+        board = Board(6, 6, np.where(mat == 0))
     else:
         raise NotImplementedError
     return board
