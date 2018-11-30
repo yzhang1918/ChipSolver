@@ -21,12 +21,13 @@ class ChipSolver:
         self._solution = []
 
     def prepare_matrices(self):
-        type_ids, A = zip(*self.chips_pool)
+        _, type_ids, A = zip(*self.chips_pool)
         A = np.stack(A)  # attrs
         # M : block-state;  H : chip-state
         M = [self.board.block_state_mats[i] for i in type_ids]
         H = block_diag(*[np.ones(x.shape[1], dtype=int) for x in M])  # shape : [n_chips, n_states]
         M = np.concatenate(M, axis=1)  # shape : [n_blocks, n_states]
+        print(f'Possilbe States: {M.shape[1]}')
         return A, M, H
 
     def solve(self):

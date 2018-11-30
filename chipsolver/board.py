@@ -17,18 +17,23 @@ class Chip:
         self.indices = indices
         self.states = self._get_all_states(decode_chip_from_indices(indices))
 
+    @property
+    def shape(self):
+        shape = self.states[0].shape
+        return min(shape), max(shape)
+
     def size(self):
         return len(self.indices)
 
     @staticmethod
-    def _get_all_states(mat):
+    def _get_all_states(raw_mat):
         """
         Rotate the chip to get all states.
         """
         states = []
         codes = set()
         for k in range(4):
-            mat = np.rot90(mat, k)
+            mat = np.rot90(raw_mat, k)
             code = (mat.tostring(), mat.shape)
             if code in codes:
                 continue

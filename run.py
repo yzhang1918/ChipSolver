@@ -16,6 +16,34 @@ def load_board(name):
         else:
             raise NotImplementedError
         board = Board(6, 6, mask_idx)
+    elif name.startswith('AGS-30'):
+        mat = np.array([[0, 0, 1, 1, 0, 0, 0, 0],
+                        [0, 1, 1, 1, 1, 0, 0, 0],
+                        [1, 1, 1, 1, 1, 1, 0, 0],
+                        [1, 1, 1, 1, 1, 1, 1, 0],
+                        [0, 1, 1, 1, 1, 1, 1, 1],
+                        [0, 0, 1, 1, 1, 1, 1, 1],
+                        [0, 0, 0, 1, 1, 1, 1, 0],
+                        [0, 0, 0, 0, 1, 1, 0, 0]
+                        ])
+        star = int(name[-1])
+        if star == 5:
+            board = Board(8, 8, np.where(mat == 0))
+        else:
+            raise NotImplementedError
+    elif name.startswith('2B14'):
+        mat = np.array([[0, 0, 1, 0, 0, 1, 0, 0],
+                        [0, 1, 1, 1, 1, 1, 1, 0],
+                        [1, 1, 1, 1, 1, 1, 1, 1],
+                        [1, 1, 1, 1, 1, 1, 1, 1],
+                        [0, 1, 1, 1, 1, 1, 1, 0],
+                        [0, 0, 1, 0, 0, 1, 0, 0]
+                       ])
+        star = int(name[-1])
+        if star == 5:
+            board = Board(6, 8, np.where(mat == 0))
+        else:
+            raise NotImplementedError
     elif name.startswith('Ex1'):
         mat = np.array([[1, 1, 1, 1, 1, 1],
                         [1, 1, 1, 1, 1, 1],
@@ -73,12 +101,13 @@ def solve(board, chips_pool, args):
                         lo=args.lower,
                         weights=args.weights,
                         solver=args.solver)
+    logger.log(f'Board Size: {board.size()}')
     selected_chips, fval, total_attrs = solver.solve()
     logger.log(f'*fval = {fval}')
     logger.log('Optimal Chips:')
     for chip in selected_chips:
         attrs = ', '.join([f'{x:3d}' for x in chip.attrs])
-        logger.log(f'|- Type-{chip.type_id:0>2d}   [{attrs}]')
+        logger.log(f'|- ID:{chip.ID:>3d} Type-{chip.type_id:0>2d}   [{attrs}]')
     total_attrs = ', '.join([f'{x:3.0f}' for x in total_attrs])
     logger.log(f'|- Total     [{total_attrs}]')
 
@@ -89,16 +118,16 @@ def solve(board, chips_pool, args):
 def load_chips_from_csv(fname):
     df = pd.read_csv(fname)
     df['type'] = df['type'].fillna(method='ffill').astype(int)
-    df['star'] = df['star'].fillna(method='ffill').astype(int)
+    # df['star'] = df['star'].fillna(method='ffill').astype(int)
     df = df.fillna(0)
     return df
 
 
 def get_chip_pool_from_df(df):
     chips_pool = []
-    ChipInfo = namedtuple('ChipInfo', 'type_id attrs')
-    for type_id, pw, sa, pr, rl, level, *_ in df.itertuples(False, False):
-        chips_pool.append(ChipInfo(type_id, np.array([pw, sa, pr, rl])))
+    ChipInfo = namedtuple('ChipInfo', 'ID type_id attrs')
+    for i, (type_id, pw, sa, pr, rl, level, *_) in enumerate(df.itertuples(False, False)):
+        chips_pool.append(ChipInfo(i, type_id, np.array([pw, sa, pr, rl])))
     return chips_pool
 
 
